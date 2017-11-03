@@ -41,6 +41,14 @@ public class Tag {
 		this.tid = tid;
 	}
 	
-	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		if(TagType.START.equals(type)) {
+			return " <"+name+">";
+		}else {
+			return " </"+name+">";
+		}
+	}
 	
 }

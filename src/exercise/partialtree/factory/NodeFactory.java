@@ -10,6 +10,8 @@ public class NodeFactory {
 		node.setTagName(tagName);
 		node.setType(type);
 		node.setUid(uid);
+		node.setStart(uid);
+		node.setEnd(uid);
 		return node;
 	}
 

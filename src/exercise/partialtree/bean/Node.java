@@ -17,7 +17,27 @@ public class Node {
 	
 	private Node flosib;
 	
+	private int start;
+	
+    private int end;
+
 	private List<Node> childList;
+	
+	public int getStart() {
+		return start;
+	}
+
+	public void setStart(int start) {
+		this.start = start;
+	}
+
+	public int getEnd() {
+		return end;
+	}
+
+	public void setEnd(int end) {
+		this.end = end;
+	}
 
 	public Node() {
 		super();
@@ -85,6 +105,17 @@ public class Node {
 		this.tagName = tagName;
 	}
 
-	
+	@Override
+	public String toString() {
+		if(NodeType.CLOSED_NODE.equals(type)) {
+			return " "+tagName+uid+" ";
+		}else if(NodeType.LEFT_OPEN_NODE.equals(type)) {
+			return " +"+tagName+uid+" ";
+		}if(NodeType.RIGHT_OPEN_NODE.equals(type)) {
+			return " "+tagName+uid+"+ ";
+		}else {
+			return " +"+tagName+uid+"+ ";
+		}
+	}
 
 }

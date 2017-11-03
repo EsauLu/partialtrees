@@ -4,9 +4,11 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.Map;
 
 import exercise.partialtree.bean.Node;
 import exercise.partialtree.bean.NodeType;
+import exercise.partialtree.bean.PartialTree;
 import exercise.partialtree.bean.Tag;
 import exercise.partialtree.bean.TagType;
 import exercise.partialtree.factory.NodeFactory;
@@ -35,8 +37,69 @@ public class PartialTreesBuilder {
 		
 		List<List<Node>> subTreeLists=buildSubTrees(chunkList);
 		
-		return null;
+		List<Node> roots=getPrePath(subTreeLists);
+		
+		List<PartialTree> pts=computeRanges(roots);
+		
+//		for(int i=0;i<roots.size();i++) {
+//			System.out.println("pt"+i+" : ");
+//			bfs(roots.get(i));
+//		}
+//		System.out.println("------------------------------------------------------------------------------------");
+		
+		return roots;
 	}
+	
+	private List<PartialTree> computeRanges(List<Node> roots){
+		
+		List<Map<Integer, Node>> nodeMapList=new ArrayList<>();
+		List<PartialTree> pts=new ArrayList<>();
+
+		int p=roots.size();
+		for(int i=0;i<p;i++) {
+			PartialTree pt=new PartialTree();
+			pt.setPid(i);
+			pt.setRoot(roots.get(i));
+			nodeMapList.add(pt.getNodeMap());
+			pts.add(pt);
+		}
+		
+		for(int st=0; st<p; st++) {
+			Map<Integer, Node> map=nodeMapList.get(st);
+			for(Integer uid: map.keySet()) {
+			    Node node = map.get(uid);
+			    if(NodeType.RIGHT_OPEN_NODE.equals(node.getType())) {
+			    	List<Node> crpNodes=new ArrayList<>();
+			    	crpNodes.add(node);
+                    int en=st+1;
+                    while(en<p) {
+                    	Node crpNode=nodeMapList.get(en).get(uid);
+                    	crpNodes.add(crpNode);
+                    	if(NodeType.LEFT_OPEN_NODE.equals(crpNode.getType())) {
+                    		break;
+                    	}
+                    	en++;
+                    }
+                    for(int k=0;k<crpNodes.size();k++) {
+                    	Node crpNode=crpNodes.get(k);
+                    	crpNode.setStart(st);
+                    	crpNode.setEnd(en);
+                    }
+			    }
+			}
+		}
+
+		
+		for(int i=0;i<pts.size();i++) {
+			System.out.println("pt"+i+" : ");
+			bfs(pts.get(i).getRoot());
+		}
+		System.out.println("------------------------------------------------------------------------------------");
+		
+		return pts;
+	}
+	
+	
 	
 	private List<Node> getPrePath(List<List<Node>> sts){
 
@@ -46,21 +109,69 @@ public class PartialTreesBuilder {
 		// open nodes in LLS or RLS are arranged in top-bottom order
 		int p=sts.size();
 		for(int i=0; i<p; i++) {
+			System.out.print("lls["+i+"] ==> ");
 			lls.add(selectLeftOpenNode(sts.get(i)));
+			System.out.println();
+			System.out.print("rls["+i+"] ==> ");
 			rls.add(selectRightOpenNode(sts.get(i)));
+			System.out.println();
+			System.out.println();
 		}
-		
-		Deque<Node> auxList=new ArrayDeque<>();
-		
+		System.out.println("------------------------------------------------------------------------------------");
+				
+		// Prepath-computation and collecting matching nodes
+		ArrayList<Node> auxList=new ArrayList<Node>();
+		List<List<Node>> pps=new ArrayList<List<Node>>();
+		pps.add(new ArrayList<Node>());
+
+		System.out.println("pp[0] ==> ");
 		for(int i=0;i<p-1;i++) {
+			
 			List<Node> rl=rls.get(i);
 			for(int j=0;j<rl.size();j++) {
-				
+				auxList.add(rl.get(j));
+			}
+			
+			int size=auxList.size()-lls.get(i+1).size();
+			for(int j=auxList.size()-1; j>=size; j--) {
+				auxList.remove(j);
+			}
+			
+			List<Node> pp=new ArrayList<Node>();
+			System.out.print("pp["+(i+1)+"] ==> ");
+			for(int j=0; j<auxList.size(); j++) {
+				Node node=auxList.get(j);
+				Node prenode=NodeFactory.createNode(node.getTagName(), NodeType.PRE_NODE, node.getUid());
+                System.out.print(prenode);
+				pp.add(prenode);
+			}
+			System.out.println();
+			pps.add(pp);
+			
+		}
+		System.out.println("------------------------------------------------------------------------------------");
+		
+		// add pre-nodes to substrees
+		List<Node> pts=new ArrayList<Node>();
+		for(int i=0; i<p; i++) {
+			List<Node> pp=pps.get(i);
+			if(pp.size()>0) {
+				int j=0;
+				for(j=0; j<pp.size()-1; j++) {
+					pp.get(j).getChildList().add(pp.get(j+1));
+				}
+				List<Node> subtrees=sts.get(i);
+				List<Node> childList=pp.get(j).getChildList();
+				for(j=0; j<subtrees.size(); j++) {
+					childList.add(subtrees.get(j));
+				}
+				pts.add(pp.get(0));
+			}else {
+				pts.add(sts.get(i).get(0));
 			}
 		}
 		
-		
-		return null;
+		return pts;
 	}
 	
 	private List<Node> selectLeftOpenNode(List<Node> pt){
@@ -71,8 +182,13 @@ public class PartialTreesBuilder {
 		
 		while(p!=null&&NodeType.LEFT_OPEN_NODE.equals(p.getType())) {
 			ll.add(p);
-			System.out.print(" +"+p.getTagName()+p.getUid()+" ");
-			p=p.getChildList().get(0);
+			System.out.print(p);
+			List<Node> childList=p.getChildList();
+			if(childList.size()>0) {
+				p=p.getChildList().get(0);
+			}else {
+				p=null;
+			}
 		}
 		
 		return ll;
@@ -86,9 +202,13 @@ public class PartialTreesBuilder {
 		
 		while(p!=null&&NodeType.RIGHT_OPEN_NODE.equals(p.getType())) {
 			rl.add(p);
-			System.out.print(" +"+p.getTagName()+p.getUid()+" ");
+			System.out.print(p);
 			List<Node> childList=p.getChildList();
-			p=childList.get(childList.size()-1);
+			if(childList.size()>0) {
+				p=childList.get(childList.size()-1);
+			}else {
+				p=null;
+			}
 		}
 		
 		return rl;
@@ -106,8 +226,10 @@ public class PartialTreesBuilder {
 			}
 			System.out.println();
 		}
+		System.out.println("------------------------------------------------------------------------------------");
 		
-		return null;
+		
+		return subTreeLists;
 	}
 	
 	private void bfs(Node root) {
@@ -123,14 +245,12 @@ public class PartialTreesBuilder {
 			
 			Node node=que.removeFirst();
 			
-			if(NodeType.LEFT_OPEN_NODE.equals(node.getType())) {
-				System.out.print(" +"+node.getTagName()+node.getUid()+" ");
-			}else if(NodeType.RIGHT_OPEN_NODE.equals(node.getType())) {
-				System.out.print(" "+node.getTagName()+node.getUid()+"+ ");
-			}else if(NodeType.PRE_NODE.equals(node.getType())) {
-				System.out.print(" +"+node.getTagName()+node.getUid()+"+ ");
+			if(NodeType.CLOSED_NODE.equals(node.getType())) {
+				System.out.print(node);
 			}else {
-				System.out.print(" "+node.getTagName()+node.getUid()+" ");
+				String s=node.toString();
+				s=s.substring(0,s.length()-1);
+				System.out.print(s+"("+node.getStart()+", "+node.getEnd()+") ");
 			}
 			
 			for(Node nd: node.getChildList()) {
@@ -220,21 +340,17 @@ public class PartialTreesBuilder {
 		}
 		
 		
+		System.out.println("------------------------------------------------------------------------------------");
 		for(int i=0;i<chunkNum;i++) {
 			System.out.print("Chunk"+i+" : ");
 			List<Tag> list = chunkList.get(i);
 			for(int j=0; j<list.size(); j++) {
 				Tag tag = list.get(j);
-				if(tag.getType().equals(TagType.START)) {
-					System.out.print("  <"+tag.getName()+">");
-				}else {
-					System.out.print("  </"+tag.getName()+">");
-				}
+                System.out.print(tag);
 			}
 			System.out.println();
 		}
-		System.out.println();
-		
+		System.out.println("------------------------------------------------------------------------------------");
 		
 		return chunkList;
 	}
