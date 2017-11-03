@@ -9,6 +9,7 @@ public class NodeFactory {
 		Node node = new Node();
 		node.setTagName(tagName);
 		node.setType(type);
+		node.setUid(uid);
 		return node;
 	}
 
