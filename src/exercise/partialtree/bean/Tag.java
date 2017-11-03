@@ -4,6 +4,7 @@ public class Tag {
 
 	private String name;
 	private TagType type;
+	private int tid;
 	
 	public Tag(String name, TagType type) {
 		super();
@@ -30,6 +31,14 @@ public class Tag {
 
 	public void setType(TagType type) {
 		this.type = type;
+	}
+
+	public int getTid() {
+		return tid;
+	}
+
+	public void setTid(int tid) {
+		this.tid = tid;
 	}
 	
 	

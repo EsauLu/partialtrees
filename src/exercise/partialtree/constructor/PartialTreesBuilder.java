@@ -41,13 +41,93 @@ public class PartialTreesBuilder {
 	private List<List<Node>> buildSubTrees( List<List<Tag>> chunkList ){
 		
 		for(int i=0;i<chunkList.size();i++) {
-			buildTreeByTags(chunkList.get(i));
+			List<Node> subTrees = buildTreesByTags(chunkList.get(i));
+			System.out.println("chunk"+i+" : ");
+			for(Node root: subTrees) {
+				bfs(root);
+			}
+			System.out.println();
 		}
 		
 		return null;
 	}
 	
-	private Node buildTreeByTags(List<Tag> tagList) {
+	private void bfs(Node root) {
+		
+		if(root==null) {
+			return;
+		}
+		
+		Deque<Node> que=new ArrayDeque<>();
+		que.addLast(root);
+		
+		while(!que.isEmpty()) {
+			
+			Node node=que.removeFirst();
+			
+			if(NodeType.LEFT_OPEN_NODE.equals(node.getType())) {
+				System.out.print(" +"+node.getTagName()+node.getUid()+" ");
+			}else if(NodeType.RIGHT_OPEN_NODE.equals(node.getType())) {
+				System.out.print(" "+node.getTagName()+node.getUid()+"+ ");
+			}else if(NodeType.PRE_NODE.equals(node.getType())) {
+				System.out.print(" +"+node.getTagName()+node.getUid()+"+ ");
+			}else {
+				System.out.print(" "+node.getTagName()+node.getUid()+" ");
+			}
+			
+			for(Node nd: node.getChildList()) {
+				que.addLast(nd);
+			}
+			
+		}
+		
+		System.out.println();
+		
+	}
+	
+	private List<Node> buildTreesByTags(List<Tag> chunk) {
+		
+		Deque<Node> stack = new ArrayDeque<Node>();
+		
+		stack.push(NodeFactory.createNode("\0", NodeType.CLOSED_NODE, 0));
+		
+		for(int i=0;i<chunk.size();i++) {
+			
+			Tag tag = chunk.get(i);
+			
+			if(TagType.START.equals(tag.getType())) {
+				
+				Node node=NodeFactory.createNode(tag.getName(), NodeType.CLOSED_NODE, tag.getTid());
+				stack.push(node);
+				
+			}else {
+				
+				Node node=stack.peek();
+				
+				if(node.getTagName().equals(tag.getName())) {
+					stack.pop();
+					stack.peek().getChildList().add(node);
+				}else {
+					Node temNode=NodeFactory.createNode(tag.getName(), NodeType.LEFT_OPEN_NODE, tag.getTid());
+					temNode.getChildList().addAll(node.getChildList());
+				    node.setChildList(new ArrayList<>());
+				    node.getChildList().add(temNode);
+				}
+				
+			}
+		}
+		
+		while(stack.size()>1) {
+			Node node=stack.pop();
+			node.setType(NodeType.RIGHT_OPEN_NODE);
+			stack.peek().getChildList().add(node);
+		}
+		
+		return stack.pop().getChildList();
+	}
+	
+	
+	private Node _buildTreeByTags(List<Tag> tagList) {
 		
 		Deque<Tag> stack = new ArrayDeque<Tag>();
 		
@@ -117,9 +197,26 @@ public class PartialTreesBuilder {
 //			System.out.println("chunks"+i+" : "+chunks[i]);
 //		}
 		
+		Deque<Tag> allTags=new ArrayDeque<>();
 		for(int i=0;i<chunkNum;i++) {
 //			System.out.print("chunks"+i+" : ");
-            chunkList.add( getTagsByXML( xmlDoc.substring(pos[i], pos[i+1]) ) );
+			List<Tag> list = getTagsByXML( xmlDoc.substring(pos[i], pos[i+1]) );
+            chunkList.add( list );
+            for(int j=0; j<list.size(); j++) {
+            	    allTags.addLast(list.get(j));
+            }
+		}
+
+		Deque<Tag> stack=new ArrayDeque<>();
+		int tid=0;
+		while(!allTags.isEmpty()) {
+			Tag tag=allTags.removeFirst();
+			if(TagType.START.equals(tag.getType())) {
+				tag.setTid(tid++);
+				stack.push(tag);
+			}else {
+				tag.setTid(stack.pop().getTid());
+			}
 		}
 		
 		
