@@ -12,6 +12,7 @@ import exercise.partialtree.bean.PartialTree;
 import exercise.partialtree.bean.Tag;
 import exercise.partialtree.bean.TagType;
 import exercise.partialtree.factory.NodeFactory;
+import exercise.partialtree.utils.TreeTools;
 
 public class PartialTreesBuilder {
 		
@@ -40,12 +41,6 @@ public class PartialTreesBuilder {
 		List<Node> roots=getPrePath(subTreeLists);
 		
 		List<PartialTree> pts=computeRanges(roots);
-		
-//		for(int i=0;i<roots.size();i++) {
-//			System.out.println("pt"+i+" : ");
-//			bfs(roots.get(i));
-//		}
-//		System.out.println("------------------------------------------------------------------------------------");
 		
 		return roots;
 	}
@@ -92,7 +87,7 @@ public class PartialTreesBuilder {
 		
 		for(int i=0;i<pts.size();i++) {
 			System.out.println("pt"+i+" : ");
-			bfs(pts.get(i).getRoot());
+			TreeTools.bfs(pts.get(i).getRoot());
 		}
 		System.out.println("------------------------------------------------------------------------------------");
 		
@@ -124,7 +119,7 @@ public class PartialTreesBuilder {
 		List<List<Node>> pps=new ArrayList<List<Node>>();
 		pps.add(new ArrayList<Node>());
 
-		System.out.println("pp[0] ==> ");
+		System.out.println("pps[0] ==> ");
 		for(int i=0;i<p-1;i++) {
 			
 			List<Node> rl=rls.get(i);
@@ -138,7 +133,7 @@ public class PartialTreesBuilder {
 			}
 			
 			List<Node> pp=new ArrayList<Node>();
-			System.out.print("pp["+(i+1)+"] ==> ");
+			System.out.print("pps["+(i+1)+"] ==> ");
 			for(int j=0; j<auxList.size(); j++) {
 				Node node=auxList.get(j);
 				Node prenode=NodeFactory.createNode(node.getTagName(), NodeType.PRE_NODE, node.getUid());
@@ -222,7 +217,7 @@ public class PartialTreesBuilder {
 			subTreeLists.add(subTrees);
 			System.out.println("pt "+i+" : ");
 			for(Node root: subTrees) {
-				bfs(root);
+				TreeTools.bfs(root);
 			}
 			System.out.println();
 		}
@@ -230,37 +225,6 @@ public class PartialTreesBuilder {
 		
 		
 		return subTreeLists;
-	}
-	
-	private void bfs(Node root) {
-		
-		if(root==null) {
-			return;
-		}
-		
-		Deque<Node> que=new ArrayDeque<>();
-		que.addLast(root);
-		
-		while(!que.isEmpty()) {
-			
-			Node node=que.removeFirst();
-			
-			if(NodeType.CLOSED_NODE.equals(node.getType())) {
-				System.out.print(node);
-			}else {
-				String s=node.toString();
-				s=s.substring(0,s.length()-1);
-				System.out.print(s+"("+node.getStart()+", "+node.getEnd()+") ");
-			}
-			
-			for(Node nd: node.getChildList()) {
-				que.addLast(nd);
-			}
-			
-		}
-		
-		System.out.println();
-		
 	}
 	
 	private List<Node> buildTreesByTags(List<Tag> chunk) {
