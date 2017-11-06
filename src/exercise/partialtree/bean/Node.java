@@ -20,6 +20,8 @@ public class Node {
 	private int start;
 	
     private int end;
+    
+    private int depth;
 
 	private List<Node> childList;
 	
@@ -103,6 +105,14 @@ public class Node {
 
 	public void setTagName(String tagName) {
 		this.tagName = tagName;
+	}
+
+	public int getDepth() {
+		return depth;
+	}
+
+	public void setDepth(int depth) {
+		this.depth = depth;
 	}
 
 	@Override

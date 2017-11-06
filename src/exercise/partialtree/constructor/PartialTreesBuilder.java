@@ -32,9 +32,13 @@ public class PartialTreesBuilder {
 		
 	}
 	
-	public List<Node> createPartialTreesByXML(String xmlDoc, int treeNum){
+	public List<PartialTree> createPartialTreesByXML(String xmlDoc, int treeNum){
+		return createPartialTreesByXML(xmlDoc, getPos(xmlDoc, treeNum));
+	}
+	
+	public List<PartialTree> createPartialTreesByXML(String xmlDoc, int[] pos){
 		
-		List<List<Tag>> chunkList=getChunksByXML(xmlDoc, treeNum);
+		List<List<Tag>> chunkList=getChunksByXML(xmlDoc, pos);
 		
 		List<List<Node>> subTreeLists=buildSubTrees(chunkList);
 		
@@ -42,7 +46,33 @@ public class PartialTreesBuilder {
 		
 		List<PartialTree> pts=computeRanges(roots);
 		
-		return roots;
+		return pts;
+		
+	}
+	
+	private int[] getPos(String xmlDoc, int chunkNum) {
+
+		int[] pos=new int[chunkNum+1];
+		int t=xmlDoc.length()/chunkNum+1;
+		for(int i=0; i<chunkNum; i++) {
+			pos[i]=i*t;
+		}
+		pos[chunkNum]=xmlDoc.length();		
+		return fixPos(xmlDoc, chunkNum, pos);
+	}
+	
+	private int[] fixPos(String xmlDoc, int chunkNum, int[] pos) {
+		long len=xmlDoc.length();
+		for(int i=0; i<chunkNum+1; i++) {		
+			if(pos[i]>=len) {
+				pos[i]=(int)len;
+				continue;
+			}
+			while(xmlDoc.charAt(pos[i])!='<') {
+				pos[i]--;
+			}
+		}
+		return pos;
 	}
 	
 	private List<PartialTree> computeRanges(List<Node> roots){
@@ -84,13 +114,6 @@ public class PartialTreesBuilder {
 			}
 		}
 
-		
-		for(int i=0;i<pts.size();i++) {
-			System.out.println("pt"+i+" : ");
-			TreeTools.bfs(pts.get(i).getRoot());
-		}
-		System.out.println("------------------------------------------------------------------------------------");
-		
 		return pts;
 	}
 	
@@ -215,9 +238,10 @@ public class PartialTreesBuilder {
 		for(int i=0;i<chunkList.size();i++) {
 			List<Node> subTrees = buildTreesByTags(chunkList.get(i));
 			subTreeLists.add(subTrees);
-			System.out.println("pt "+i+" : ");
+			System.out.println("Subtrees "+i+" : ");
 			for(Node root: subTrees) {
-				TreeTools.bfs(root);
+				System.out.print(" ");
+				TreeTools.dfs(root);
 			}
 			System.out.println();
 		}
@@ -267,21 +291,11 @@ public class PartialTreesBuilder {
 		
 		return stack.pop().getChildList();
 	}
+	
+	private List<List<Tag>> getChunksByXML(String xmlDoc, int[] pos){
 
-	private List<List<Tag>> getChunksByXML(String xmlDoc, int chunkNum){
-		
 		List<List<Tag>> chunkList=new ArrayList<>();
-		
-		int[] pos=new int[chunkNum+1];
-		int t=xmlDoc.length()/chunkNum+1;
-		for(int i=0; i<chunkNum; i++) {
-			pos[i]=i*t;
-			while(xmlDoc.charAt(pos[i])!='<') {
-				pos[i]--;
-			}
-		}
-		pos[chunkNum]=xmlDoc.length();
-		
+		int chunkNum=pos.length-1;
 		Deque<Tag> allTags=new ArrayDeque<>();
 		for(int i=0;i<chunkNum;i++) {
 			List<Tag> list = getTagsByXML( xmlDoc.substring(pos[i], pos[i+1]) );
@@ -318,7 +332,7 @@ public class PartialTreesBuilder {
 		
 		return chunkList;
 	}
-	
+
 	private List<Tag> getTagsByXML(String chunkStr){
 		
 		List<Tag> tagList=new ArrayList<Tag>();

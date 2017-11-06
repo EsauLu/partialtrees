@@ -46,6 +46,7 @@ public class PartialTree {
 		if(root==null) {
 			return;
 		}
+		root.setDepth(1);
 		
 		Deque<Node> que=new ArrayDeque<>();
 		que.addLast(root);
@@ -58,8 +59,16 @@ public class PartialTree {
 				nodeMap.put(node.getUid(), node);
 			}
 			
+			Node presib=null;
 			for(Node nd: node.getChildList()) {
 				que.addLast(nd);
+				nd.setDepth(node.getDepth()+1);
+				nd.setParent(node);
+				if(presib!=null) {
+					nd.setPresib(presib);
+					presib.setFlosib(nd);
+				}
+				presib=nd;
 			}
 			
 		}
