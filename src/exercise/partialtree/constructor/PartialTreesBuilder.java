@@ -365,8 +365,3 @@ public class PartialTreesBuilder {
 }
 
 
-/*
- 
- <A><B><C><E></E></C><D></D></B><E></E><B><B><D><E></E><D/><C><C/></B><C><E><E/></C><D><E></E></D></B><E><D></D></E><B><D></C><D></C></B><B></B></A>
- 
- */

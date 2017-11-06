@@ -24,7 +24,7 @@ public class Main {
 //				                                                                      + "<E></E></D></B><E><D></D></E>"
 //				                                                                      + "<B><D></D><C></C></B><B></B></A>", pos);
 
-		int[] pos= {0, 9, 16, 28};		
+		int[] pos= {0, 9, 16, 29};		
 		List<PartialTree> pts=PartialTreesBuilder.getInstance().createPartialTreesByXML("<A><B><C><D></D></C></B></A>", pos);
 
 //		List<PartialTree> pts=PartialTreesBuilder.getInstance().createPartialTreesByXML("<A><B><C><D></D></C></B></A>", 3);
@@ -45,3 +45,42 @@ public class Main {
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
