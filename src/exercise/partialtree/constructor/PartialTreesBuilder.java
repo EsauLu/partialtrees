@@ -38,7 +38,7 @@ public class PartialTreesBuilder {
 	
 	public List<PartialTree> createPartialTreesByXML(String xmlDoc, int[] pos){
 		
-		List<List<Tag>> chunkList=getChunksByXML(xmlDoc, pos);
+		List<List<Tag>> chunkList=getChunksByXML(xmlDoc, fixPos(xmlDoc, pos));
 		
 		List<List<Node>> subTreeLists=buildSubTrees(chunkList);
 		
@@ -58,12 +58,12 @@ public class PartialTreesBuilder {
 			pos[i]=i*t;
 		}
 		pos[chunkNum]=xmlDoc.length();		
-		return fixPos(xmlDoc, chunkNum, pos);
+		return fixPos(xmlDoc, pos);
 	}
 	
-	private int[] fixPos(String xmlDoc, int chunkNum, int[] pos) {
+	private int[] fixPos(String xmlDoc, int[] pos) {
 		long len=xmlDoc.length();
-		for(int i=0; i<chunkNum+1; i++) {		
+		for(int i=0; i<pos.length; i++) {		
 			if(pos[i]>=len) {
 				pos[i]=(int)len;
 				continue;
