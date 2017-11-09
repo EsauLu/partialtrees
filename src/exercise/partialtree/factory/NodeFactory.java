@@ -1,7 +1,7 @@
 package exercise.partialtree.factory;
 
-import exercise.partialtree.bean.Node;
-import exercise.partialtree.bean.NodeType;
+import exercise.bean.Node;
+import exercise.bean.NodeType;
 
 public class NodeFactory {
 	

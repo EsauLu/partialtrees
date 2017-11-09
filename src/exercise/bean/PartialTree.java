@@ -1,4 +1,4 @@
-package exercise.partialtree.bean;
+package exercise.bean;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -46,7 +46,7 @@ public class PartialTree {
 		if(root==null) {
 			return;
 		}
-		root.setDepth(1);
+		root.setDepth(0);
 		
 		Deque<Node> que=new ArrayDeque<>();
 		que.addLast(root);

@@ -1,4 +1,4 @@
-package exercise.partialtree.bean;
+package exercise.bean;
 
 import java.util.ArrayList;
 import java.util.List;

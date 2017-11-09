@@ -1,10 +1,14 @@
-package exercise.partialtree.test;
+package exercise.test;
 
 import java.util.List;
 
-import exercise.partialtree.bean.PartialTree;
+import exercise.bean.Node;
+import exercise.bean.PartialTree;
+import exercise.bean.Step;
 import exercise.partialtree.constructor.PartialTreesBuilder;
 import exercise.partialtree.utils.TreeTools;
+import exercise.queries.QueryExecutor;
+import exercise.queries.parse.XPathTools;
 
 public class Main {
 
@@ -16,20 +20,13 @@ public class Main {
 //				                                                + "<C></C></B><C><E></E></C><D><E>"
 //				                                                + "</E></D></B><E><D></D></E><B>"
 //				                                                + "<D></D><C></C></B><B></B></A>", 5);
-
-		int[] pos= {0, 31,58};		
+		
+		int[] pos= {0, 31, 58, 86, 115, 147};		
 		List<PartialTree> pts=PartialTreesBuilder.getInstance().createPartialTreesByXML("<A><B><C><E></E></C><D></D></B>"
 				                                                                      + "<E></E><B><B><D><E></E></D>"
 				                                                                      + "<C></C></B><C><E></E></C><D>"
 				                                                                      + "<E></E></D></B><E><D></D></E>"
 				                                                                      + "<B><D></D><C></C></B><B></B></A>", pos);
-		
-//		int[] pos= {0, 31, 58, 86, 115, 147};		
-//		List<PartialTree> pts=PartialTreesBuilder.getInstance().createPartialTreesByXML("<A><B><C><E></E></C><D></D></B>"
-//				                                                                      + "<E></E><B><B><D><E></E></D>"
-//				                                                                      + "<C></C></B><C><E></E></C><D>"
-//				                                                                      + "<E></E></D></B><E><D></D></E>"
-//				                                                                      + "<B><D></D><C></C></B><B></B></A>", pos);
 		
 		
 
@@ -37,7 +34,6 @@ public class Main {
 //		List<PartialTree> pts=PartialTreesBuilder.getInstance().createPartialTreesByXML("<A><B><C></C><D></D></B></A>", pos);
 
 //		List<PartialTree> pts=PartialTreesBuilder.getInstance().createPartialTreesByXML("<A><B><C><D></D></C></B></A>", 3);
-		
 
 		System.out.println("====================================================================================");
 		System.out.println();
@@ -50,6 +46,22 @@ public class Main {
 		}
 		System.out.println("====================================================================================");
 		
+		
+		List<Step> steps=XPathTools.parseXPathToSteps("/child::A/child::B");
+		
+		System.out.println("Results of query : ");
+		System.out.println();
+		int i=0;
+		for(List<Node> result:QueryExecutor.query(steps, pts)) {
+			
+			System.out.print("pt"+(i++)+" : ");
+			
+			for(Node node: result) {
+				System.out.print(node);
+			}
+
+			System.out.println();
+		}
 		
 	}
 

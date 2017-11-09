@@ -6,13 +6,12 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 
-import exercise.partialtree.bean.Node;
-import exercise.partialtree.bean.NodeType;
-import exercise.partialtree.bean.PartialTree;
-import exercise.partialtree.bean.Tag;
-import exercise.partialtree.bean.TagType;
+import exercise.bean.Node;
+import exercise.bean.NodeType;
+import exercise.bean.PartialTree;
+import exercise.bean.Tag;
+import exercise.bean.TagType;
 import exercise.partialtree.factory.NodeFactory;
-import exercise.partialtree.utils.TreeTools;
 
 public class PartialTreesBuilder {
 		
@@ -127,22 +126,15 @@ public class PartialTreesBuilder {
 		// open nodes in LLS or RLS are arranged in top-bottom order
 		int p=sts.size();
 		for(int i=0; i<p; i++) {
-			System.out.print("lls["+i+"] ==> ");
 			lls.add(selectLeftOpenNode(sts.get(i)));
-			System.out.println();
-			System.out.print("rls["+i+"] ==> ");
 			rls.add(selectRightOpenNode(sts.get(i)));
-			System.out.println();
-			System.out.println();
 		}
-		System.out.println("------------------------------------------------------------------------------------");
 				
 		// Prepath-computation and collecting matching nodes
 		ArrayList<Node> auxList=new ArrayList<Node>();
 		List<List<Node>> pps=new ArrayList<List<Node>>();
 		pps.add(new ArrayList<Node>());
 
-		System.out.println("pps[0] ==> ");
 		for(int i=0;i<p-1;i++) {
 			
 			List<Node> rl=rls.get(i);
@@ -156,18 +148,14 @@ public class PartialTreesBuilder {
 			}
 			
 			List<Node> pp=new ArrayList<Node>();
-			System.out.print("pps["+(i+1)+"] ==> ");
 			for(int j=0; j<auxList.size(); j++) {
 				Node node=auxList.get(j);
 				Node prenode=NodeFactory.createNode(node.getTagName(), NodeType.PRE_NODE, node.getUid());
-                System.out.print(prenode);
 				pp.add(prenode);
 			}
-			System.out.println();
 			pps.add(pp);
 			
 		}
-		System.out.println("------------------------------------------------------------------------------------");
 		
 		// add pre-nodes to substrees
 		List<Node> pts=new ArrayList<Node>();
@@ -200,7 +188,6 @@ public class PartialTreesBuilder {
 		
 		while(p!=null&&NodeType.LEFT_OPEN_NODE.equals(p.getType())) {
 			ll.add(p);
-			System.out.print(p);
 			List<Node> childList=p.getChildList();
 			if(childList.size()>0) {
 				p=p.getChildList().get(0);
@@ -220,7 +207,6 @@ public class PartialTreesBuilder {
 		
 		while(p!=null&&NodeType.RIGHT_OPEN_NODE.equals(p.getType())) {
 			rl.add(p);
-			System.out.print(p);
 			List<Node> childList=p.getChildList();
 			if(childList.size()>0) {
 				p=childList.get(childList.size()-1);
@@ -238,14 +224,7 @@ public class PartialTreesBuilder {
 		for(int i=0;i<chunkList.size();i++) {
 			List<Node> subTrees = buildTreesByTags(chunkList.get(i));
 			subTreeLists.add(subTrees);
-			System.out.println("Subtrees "+i+" : ");
-			for(Node root: subTrees) {
-				System.out.print(" ");
-				TreeTools.dfs(root);
-			}
-			System.out.println();
 		}
-		System.out.println("------------------------------------------------------------------------------------");
 		
 		
 		return subTreeLists;
@@ -305,6 +284,20 @@ public class PartialTreesBuilder {
             }
 		}
 
+		Tag startRoot=new Tag("Root",TagType.START);
+		List<Tag> tem=chunkList.get(0);
+		if(tem!=null) {
+			startRoot.setTid(Integer.MIN_VALUE);
+			tem.add(0, startRoot);
+		}
+		
+		Tag endRoot=new Tag("Root",TagType.END);
+		tem=chunkList.get(chunkList.size()-1);
+		if(tem!=null) {
+			endRoot.setTid(Integer.MIN_VALUE);
+			tem.add(endRoot);
+		}
+
 		Deque<Tag> stack=new ArrayDeque<>();
 		int tid=0;
 		while(!allTags.isEmpty()) {
@@ -316,19 +309,6 @@ public class PartialTreesBuilder {
 				tag.setTid(stack.pop().getTid());
 			}
 		}
-		
-		
-		System.out.println("------------------------------------------------------------------------------------");
-		for(int i=0;i<chunkNum;i++) {
-			System.out.print("Chunk"+i+" : ");
-			List<Tag> list = chunkList.get(i);
-			for(int j=0; j<list.size(); j++) {
-				Tag tag = list.get(j);
-                System.out.print(tag);
-			}
-			System.out.println();
-		}
-		System.out.println("------------------------------------------------------------------------------------");
 		
 		return chunkList;
 	}

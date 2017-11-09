@@ -1,4 +1,4 @@
-package exercise.partialtree.bean;
+package exercise.bean;
 
 public class Tag {
 
