@@ -47,22 +47,10 @@ public class Main {
 		System.out.println("====================================================================================");
 		
 		
-		List<Step> steps=XPathTools.parseXPathToSteps("/child::A/child::B");
+		List<Step> steps=XPathTools.parseXPathToSteps("/child::A/descendant::B/descendant::C");
 		
-		System.out.println("Results of query : ");
-		System.out.println();
-		int i=0;
-		for(List<Node> result:QueryExecutor.query(steps, pts)) {
-			
-			System.out.print("pt"+(i++)+" : ");
-			
-			for(Node node: result) {
-				System.out.print(node);
-			}
+		List<List<Node>> resultList=QueryExecutor.query(steps, pts);
 
-			System.out.println();
-		}
-		
 	}
 
 }

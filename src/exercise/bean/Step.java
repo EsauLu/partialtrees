@@ -46,7 +46,7 @@ public class Step {
 
 	@Override
 	public String toString() {
-		String s="/" + axis + "::" + nameTest;
+		String s=axis + "::" + nameTest;
 		
 		if(predicate!=null&&!predicate.equals("")) {
 			s+="["+predicate+"]";

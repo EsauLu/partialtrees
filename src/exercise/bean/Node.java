@@ -11,6 +11,8 @@ public class Node {
 	
 	private NodeType type;
 	
+	private boolean isChecked;
+	
 	private Node parent;
 	
 	private Node presib;
@@ -25,6 +27,15 @@ public class Node {
 
 	private List<Node> childList;
 	
+	public Node() {
+		super();
+		// TODO Auto-generated constructor stub
+		
+		this.type=NodeType.CLOSED_NODE;
+		this.childList=new ArrayList<Node>();
+				
+	}
+
 	public int getStart() {
 		return start;
 	}
@@ -41,13 +52,12 @@ public class Node {
 		this.end = end;
 	}
 
-	public Node() {
-		super();
-		// TODO Auto-generated constructor stub
-		
-		this.type=NodeType.CLOSED_NODE;
-		this.childList=new ArrayList<Node>();
-				
+	public boolean isChecked() {
+		return isChecked;
+	}
+
+	public void setChecked(boolean isChecked) {
+		this.isChecked = isChecked;
 	}
 
 	public int getUid() {
