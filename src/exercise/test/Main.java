@@ -47,7 +47,7 @@ public class Main {
 		System.out.println("====================================================================================");
 		
 		
-		List<Step> steps=XPathTools.parseXPathToSteps("/child::A/descendant::B/descendant::C");
+		List<Step> steps=XPathTools.parseXPathToSteps("/child::A/descendant::B/descendant::C/parent::B");
 		
 		List<List<Node>> resultList=QueryExecutor.query(steps, pts);
 

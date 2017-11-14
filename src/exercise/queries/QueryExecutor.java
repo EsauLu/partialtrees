@@ -1,13 +1,12 @@
 package exercise.queries;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 
 import exercise.bean.Axis;
 import exercise.bean.Node;
+import exercise.bean.NodeType;
 import exercise.bean.PartialTree;
 import exercise.bean.Step;
 
@@ -18,8 +17,9 @@ public class QueryExecutor {
 	public static List<List<Node>> query(List<Step> steps, List<PartialTree> pts){
 
 		int p=pts.size();
-		List<List<Node>> resultList=new ArrayList<>();
-		
+		List<List<Node>> resultList=new ArrayList<List<Node>>();
+		String string="";
+		string.hashCode();
 		for(int i=0;i<p;i++) {
 			List<Node> tem = new ArrayList<>();
 			tem.add(pts.get(i).getRoot());
@@ -29,23 +29,14 @@ public class QueryExecutor {
 		int size=steps.size();
 		for(int i=0;i<size;i++) {
 			
-			List<List<Node>> inputLists=resultList;
-			resultList=new ArrayList<>();
-			
 			Step step = steps.get(i);
-			for(int j=0;j<p;j++) {
-				
-				List<Node> result = new ArrayList<>();
-				result.addAll( queryWithAixs( pts.get(j), inputLists.get(j), step ) );
-				
-				String predicate = step.getPredicate();
-				if(predicate!=null) {
-					// querying predicate
-				}
-				
-				resultList.add(result);
-			}			
-
+			resultList = queryWithAixs(step.getAxis(), pts, resultList, step.getNameTest() );
+			
+			String predicate = step.getPredicate();
+			if(predicate!=null) {
+				// querying predicate
+			}
+			
 			System.out.println();
 			System.out.println("Step"+i+" : "+step);
 			System.out.println();
@@ -67,89 +58,90 @@ public class QueryExecutor {
 		return resultList;
 	}
 	
-	public static List<Node> queryWithAixs(PartialTree pt, List<Node> inputList, Step step){
-		Axis axis=step.getAxis();
+	public static List<List<Node>> queryWithAixs(Axis axis, List<PartialTree> pts, List<List<Node>> inputLists, String test){
 		
 		if(Axis.CHILD.equals(axis)) {
-			return queryChid(pt, inputList, step.getNameTest());
+			return queryChid(pts, inputLists, test);
 		}
 		
 		if(Axis.DESCENDANT.equals(axis)) {
-			return queryDescendant(pt, inputList, step.getNameTest());
+			return queryDescendant(pts, inputLists, test);
+		}
+		
+		if(Axis.PARENT.equals(axis)) {
+            return queryParent(pts, inputLists, test);
 		}
 		
 		return null;
 	}
 	
-	public static List<Node> queryChid(PartialTree pt, List<Node> inputList, String test){
-	    List<Node> outputList=new ArrayList<>();
-	    
-	    Map<Integer, Node> nodeMap=pt.getNodeMap();
-	    for(int i=0;i<inputList.size();i++) {
-	    	    Node inputNode = inputList.get(i);
-	    	    Node originNode = nodeMap.get(inputNode.getUid());
-	    	    for(Node ch: originNode.getChildList()) {
-	    	    	    if(ch.getTagName().equals(test)) {
-	    	    	    	    outputList.add(ch);
-	    	    	    }
-	    	    }
-	    }
+	public static List<List<Node>> queryChid(List<PartialTree> pts, List<List<Node>> inputLists, String test){
+		List<List<Node>> outputList=new ArrayList<>();
+		
+		int p=pts.size();
+		for(int i=0;i<p;i++) {
+			
+			PartialTree pt=pts.get(i);
+			
+			List<Node> result = pt.findChilds(inputLists.get(i), test);
+			
+			outputList.add(result);
+			
+		}
 	    
 		return outputList;
 	}
 	
-	public static List<Node> queryDescendant(PartialTree pt, List<Node> inputList, String test){
-
-	    List<Node> outputList=new ArrayList<>();
-		setIsChecked(pt, false);
-
-		Map<Integer, Node> nodeMap=pt.getNodeMap();
-		for (int i = 0; i < inputList.size(); i++) {
+	public static List<List<Node>> queryDescendant(List<PartialTree> pts, List<List<Node>> inputLists, String test){
+		List<List<Node>> outputList=new ArrayList<>();
+		
+		int p=pts.size();
+		for(int i=0;i<p;i++) {
 			
-			Node node=nodeMap.get(inputList.get(i).getUid());
-			if(node==null) {
-				continue;
-			}
+			PartialTree pt=pts.get(i);
 			
-		    Deque<Node> stack=new ArrayDeque<>();
-			stack.push(node);
+			List<Node> result = pt.findDescendants(inputLists.get(i), test);
 			
-			while(!stack.isEmpty()) {
-				Node nt=stack.pop();
-				if (nt.isChecked()) {
-					continue;
-				}
-				nt.setChecked(true);
-				List<Node> childList = nt.getChildList();
-				for(int j=0; j<childList.size(); j++) {
-					Node ch=childList.get(j);
-					if(ch.getTagName().equals(test)) {
-						outputList.add(ch);
-						stack.push(ch);
-					}
-				}
-			}
+			outputList.add(result);
 			
 		}
-		
-		return outputList;
+	    
+		return outputList;		
 	}
 	
-	private static void setIsChecked(PartialTree pt, boolean isChecked) {
+	public static List<List<Node>> queryParent(List<PartialTree> pts, List<List<Node>> inputLists, String test) {
+
+		List<List<Node>> outputList=new ArrayList<>();
 		
-		Map<Integer, Node> nodeMap=pt.getNodeMap();
-		for(Integer uid: nodeMap.keySet()) {
-			Node node = nodeMap.get(uid);
-			node.setChecked(isChecked);
+		int p=pts.size();
+		for(int i=0;i<p;i++) {
+			
+			PartialTree pt=pts.get(i);
+			
+			List<Node> result = pt.findParents(inputLists.get(i), test);
+			
+			outputList.add(result);
+			
+		}
+	    
+		return outputList;		
+		
+	}
+	
+	public List<List<Node>> shareNodes(List<PartialTree> pts, List<List<Node>> nodeLists){
+		
+		List<Node> toBeShare=new ArrayList<Node>();
+		
+		int p=pts.size();
+		for(int i=0;i<p;i++) {
+			for(Node node: nodeLists.get(i)) {
+				if(!NodeType.CLOSED_NODE.equals(node.getType())) {
+					toBeShare.add(node);
+					
+				}
+			}
 		}
 		
-	}
-	
-	public static List<Node> queryParent() {
-		return null;
-	}
-	
-	public List<Node> shareNodes(PartialTree pt, List<Node> nodeList){
 		return null;
 	}
 

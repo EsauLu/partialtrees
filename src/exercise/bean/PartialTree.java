@@ -1,8 +1,10 @@
 package exercise.bean;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PartialTree {
@@ -41,6 +43,81 @@ public class PartialTree {
 		return target;
 	}
 	
+	public List<Node> findChilds(List<Node> inputList, String test){
+		
+	    List<Node> outputList=new ArrayList<>();
+	    
+	    for(int i=0;i<inputList.size();i++) {
+	    	    Node inputNode = inputList.get(i);
+	    	    Node originNode = nodeMap.get(inputNode.getUid());
+	    	    for(Node ch: originNode.getChildList()) {
+	    	    	    if(ch.getTagName().equals(test)) {
+	    	    	    	    outputList.add(ch);
+	    	    	    }
+	    	    }
+	    }
+	    
+		return outputList;
+		
+	}	
+	
+	public List<Node> findDescendants(List<Node> inputList, String test){
+
+	    List<Node> outputList=new ArrayList<>();
+		setIsChecked(false);
+
+		for (int i = 0; i < inputList.size(); i++) {
+			
+			Node node=nodeMap.get(inputList.get(i).getUid());
+			if(node==null) {
+				continue;
+			}
+			
+		    Deque<Node> stack=new ArrayDeque<>();
+			stack.push(node);
+			
+			while(!stack.isEmpty()) {
+				Node nt=stack.pop();
+				if (nt.isChecked()) {
+					continue;
+				}
+				nt.setChecked(true);
+				List<Node> childList = nt.getChildList();
+				for(int j=0; j<childList.size(); j++) {
+					Node ch=childList.get(j);
+					if(ch.getTagName().equals(test)) {
+						outputList.add(ch);
+					}
+					stack.push(ch);
+				}
+			}
+			
+		}
+		
+		return outputList;
+	}
+	
+	public List<Node> findParents(List<Node> inputList, String test){
+
+	    List<Node> outputList=new ArrayList<>();
+
+	    for(int i=0;i<inputList.size();i++) {
+	    	    Node node=nodeMap.get(inputList.get(i).getUid());
+	    	    if(node==null) {
+	    	    	    continue;
+	    	    }
+	    	    
+	    	    Node parent=node.getParent();
+	    	    if(parent!=null) {
+	    	    	    outputList.add(parent);
+	    	    }
+	    	    
+	    }
+	    
+		return outputList;
+	}
+	
+	
 	private void bfs() {		
 		
 		if(root==null) {
@@ -74,5 +151,15 @@ public class PartialTree {
 		}
 		
 	}
+	
+	private void setIsChecked(boolean isChecked) {
+		
+		for(Integer uid: nodeMap.keySet()) {
+			Node node = nodeMap.get(uid);
+			node.setChecked(isChecked);
+		}
+		
+	}
+	
 
 }
