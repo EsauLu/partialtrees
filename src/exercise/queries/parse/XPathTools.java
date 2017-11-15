@@ -18,7 +18,6 @@ public class XPathTools {
 		Pattern pattern = Pattern.compile("/(([a-zA-Z\\-]*)(::)*([a-zA-Z])*(\\[([^\\]]*)\\])?)");
 		Matcher matcher = pattern.matcher(xpath);
 		
-		System.out.println();
 		List<Step> steps=new ArrayList<Step>();
 		while (matcher.find()) {
 			

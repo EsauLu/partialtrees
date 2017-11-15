@@ -117,6 +117,57 @@ public class PartialTree {
 		return outputList;
 	}
 	
+	public List<Node> findCorrespondingNodes(List<Node> inputList){
+		List<Node> outputList=new ArrayList<Node>();
+		
+		for(int i=0;i<inputList.size();i++) {
+			Node node=nodeMap.get(inputList.get(i).getUid());
+			if(node!=null) {
+				outputList.add(node);
+			}
+		}
+		
+		return outputList;
+		
+	}
+	
+	public List<Node> findFollowingSiblings(List<Node> inputList, String test){
+		
+		List<Node> outputList=new ArrayList<Node>();
+		
+		setIsChecked(false);
+		 
+		for(int i=0;i<inputList.size();i++) {
+		    Node node=inputList.get(i);
+		    while(!node.isChecked()&&node.getFlosib()!=null) {
+		    	    node.setChecked(true);
+		    	    node=node.getFlosib();
+		    	    if(node.getTagName().equals(test)) {
+		    	    	    outputList.add(node);
+		    	    }
+		    }
+		}
+
+		return outputList;
+		
+	}
+	
+	
+	public List<Node> findNodesByUid(List<Integer> uids){
+		
+		List<Node> outputList=new ArrayList<Node>();
+		
+		for(int i=0;i<uids.size();i++) {
+			Node node=nodeMap.get(uids.get(i));
+			if(node!=null) {
+				outputList.add(node);
+			}
+		}
+		
+		return outputList;
+		
+	}
+	
 	
 	private void bfs() {		
 		

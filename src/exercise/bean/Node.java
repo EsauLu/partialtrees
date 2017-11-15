@@ -1,7 +1,9 @@
 package exercise.bean;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 public class Node {
 	
@@ -137,5 +139,60 @@ public class Node {
 			return " +"+tagName+uid+"+ ";
 		}
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		
+		if(obj instanceof Node) {
+			
+			Node node=(Node) obj;
+			
+			if(node.getUid()==uid && node.tagName.equals(tagName) && node.getType().equals(type)) {
+				return true;
+			}
+			
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		
+		HashSet<Node> set=new HashSet<>();
+		
+		set.contains(null);
+		
+		return Objects.hash(uid, tagName, type);
+	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

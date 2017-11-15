@@ -1,13 +1,15 @@
 package exercise.queries;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import exercise.bean.Axis;
 import exercise.bean.Node;
 import exercise.bean.NodeType;
 import exercise.bean.PartialTree;
+import exercise.bean.RemoteNode;
 import exercise.bean.Step;
 
 public class QueryExecutor {
@@ -72,10 +74,15 @@ public class QueryExecutor {
             return queryParent(pts, inputLists, test);
 		}
 		
+		if(Axis.FOLLOWING_SIBLING.equals(axis)) {
+			return queryFollowingSibling(pts, inputLists, test);
+		}
+		
 		return null;
 	}
 	
 	public static List<List<Node>> queryChid(List<PartialTree> pts, List<List<Node>> inputLists, String test){
+				
 		List<List<Node>> outputList=new ArrayList<>();
 		
 		int p=pts.size();
@@ -123,12 +130,13 @@ public class QueryExecutor {
 			outputList.add(result);
 			
 		}
+		
 	    
-		return outputList;		
+		return shareNodes(pts, outputList);		
 		
 	}
 	
-	public List<List<Node>> shareNodes(List<PartialTree> pts, List<List<Node>> nodeLists){
+	public static List<List<Node>> shareNodes(List<PartialTree> pts, List<List<Node>> nodeLists){
 		
 		List<Node> toBeShare=new ArrayList<Node>();
 		
@@ -137,13 +145,100 @@ public class QueryExecutor {
 			for(Node node: nodeLists.get(i)) {
 				if(!NodeType.CLOSED_NODE.equals(node.getType())) {
 					toBeShare.add(node);
-					
 				}
 			}
 		}
+				
+		for(int i=0;i<p;i++) {
+			
+			Set<Node> set=new HashSet<Node>();
+			List<Node> inputList=nodeLists.get(i);
+			PartialTree pt=pts.get(i);
+			
+			set.addAll(inputList);			
+		    set.addAll( pt.findCorrespondingNodes( toBeShare ) );
+		    
+		    inputList.clear();
+		    inputList.addAll(set);
+			
+		}
 		
-		return null;
+		return nodeLists;
 	}
+	
+	public static List<List<Node>> queryFollowingSibling( List<PartialTree> pts, List<List<Node>> inputLists, String test ){
+		
+		List<List<Node>> outputList=new ArrayList<List<Node>>();		
+		int p=pts.size();
+		
+		// Local query
+		for(int i=0;i<p;i++) {			
+			PartialTree pt=pts.get(i);
+			List<Node> result=pt.findFollowingSiblings(inputLists.get(i), test);
+			outputList.add(result);			
+		}
+		
+		//Preparing remote query
+		List<RemoteNode> toBeQueried=new ArrayList<RemoteNode>();		
+		for(int i=0;i<p;i++) {			
+			for(Node n: inputLists.get(i)) {				
+				Node parent = n.getParent();				
+				if( !NodeType.RIGHT_OPEN_NODE.equals(n.getType()) && !NodeType.PRE_NODE.equals(n.getType()) 
+						&& parent!=null
+						    && (NodeType.RIGHT_OPEN_NODE.equals(parent.getType()) || NodeType.PRE_NODE.equals(parent.getType()) )) {					
+					toBeQueried.add(new RemoteNode(parent, i+1, parent.getEnd()));					
+				}				
+			}			
+		}
+		
+		System.out.println("tobequery");
+		for(RemoteNode node: toBeQueried) {
+			System.out.print(node);
+		}
+
+		System.out.println();
+		
+		//Regoup nodes by partial tree id
+		List<List<Node>> remoteInputList=new ArrayList<List<Node>>();	
+		
+		for(int i=0;i<p;i++) {			
+			List<Node> remoteInput=new ArrayList<Node>();			
+			for(RemoteNode rn: toBeQueried) {
+				if(rn.st<=p&&rn.ed>=p) {
+					remoteInput.add(rn.node);
+				}
+			}			
+			remoteInputList.add(remoteInput);			
+		}
+		
+
+		System.out.println("remote");			
+		System.out.println();
+		for(int j=0; j<remoteInputList.size(); j++) {
+			List<Node> result=remoteInputList.get(j);
+			System.out.print("  pt"+j+" : ");
+			
+			for(Node node: result) {
+				System.out.print(node);
+			}
+
+			System.out.println();
+		}			
+		System.out.println();
+		System.out.println("---------------------------------------------------------------------");
+		
+		//Remote query
+		List<List<Node>> remoteOutputList=queryChid(pts, remoteInputList, test);
+		
+		//Merge results of local query and remote query
+		for(int i=0;i<p;i++) {
+			outputList.get(i).addAll( remoteOutputList.get(i) );			
+		}
+	    
+		return outputList;	
+		
+	}
+
 
 }
 
