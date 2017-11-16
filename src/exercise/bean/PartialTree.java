@@ -138,14 +138,20 @@ public class PartialTree {
 		setIsChecked(false);
 		 
 		for(int i=0;i<inputList.size();i++) {
+			
 		    Node node=inputList.get(i);
+		    
 		    while(!node.isChecked()&&node.getFlosib()!=null) {
+		    	
 		    	    node.setChecked(true);
 		    	    node=node.getFlosib();
+		    	    
 		    	    if(node.getTagName().equals(test)) {
 		    	    	    outputList.add(node);
 		    	    }
+		    	    
 		    }
+		    
 		}
 
 		return outputList;

@@ -22,6 +22,7 @@ public class QueryExecutor {
 		List<List<Node>> resultList=new ArrayList<List<Node>>();
 		String string="";
 		string.hashCode();
+		
 		for(int i=0;i<p;i++) {
 			List<Node> tem = new ArrayList<>();
 			tem.add(pts.get(i).getRoot());
@@ -119,7 +120,6 @@ public class QueryExecutor {
 			
 		}
 		
-	    
 		return shareNodes(pts, outputList);		
 		
 	}
