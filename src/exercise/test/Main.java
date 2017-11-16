@@ -71,20 +71,7 @@ public class Main {
 
 /*
 
- 
- 
- 
- [ "a", "b", "c", 
- 
- "/c", "d",
- 
-  "/d", "/b", "/a" ]
 
-
-
-Your Order Number is: 5719319705
-
-Root Password has been successfully set to:  dQMGHcZh9Ud8
 
 
 */
