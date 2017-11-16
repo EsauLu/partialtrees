@@ -41,19 +41,7 @@ public class QueryExecutor {
 			
 			System.out.println();
 			System.out.println("Step"+i+" : "+step);
-			System.out.println();
-			for(int j=0; j<p; j++) {
-				List<Node> result=resultList.get(j);
-				System.out.print("  pt"+j+" : ");
-				
-				for(Node node: result) {
-					System.out.print(node);
-				}
-
-				System.out.println();
-			}			
-			System.out.println();
-			System.out.println("---------------------------------------------------------------------");
+			print(resultList);
 			
 		}
 		
@@ -174,7 +162,7 @@ public class QueryExecutor {
 		// Local query
 		for(int i=0;i<p;i++) {			
 			PartialTree pt=pts.get(i);
-			List<Node> result=pt.findFollowingSiblings(inputLists.get(i), test);
+			List<Node> result = pt.findFollowingSiblings(inputLists.get(i), test);
 			outputList.add(result);			
 		}
 		
@@ -191,31 +179,53 @@ public class QueryExecutor {
 			}			
 		}
 		
-		System.out.println("tobequery");
-		for(RemoteNode node: toBeQueried) {
-			System.out.print(node);
-		}
-
-		System.out.println();
-		
-		//Regoup nodes by partial tree id
-		List<List<Node>> remoteInputList=new ArrayList<List<Node>>();	
-		
+		//Regroup nodes by partial tree id
+		List<List<Integer>> uidLists=new ArrayList<>();		
 		for(int i=0;i<p;i++) {			
-			List<Node> remoteInput=new ArrayList<Node>();			
+			List<Integer> uidList=new ArrayList<Integer>();	
+			Set<Integer> uidSet=new HashSet<Integer>();
 			for(RemoteNode rn: toBeQueried) {
-				if(rn.st<=p&&rn.ed>=p) {
-					remoteInput.add(rn.node);
+				if(rn.st<=i&&rn.ed>=i) {
+					uidSet.add(rn.node.getUid());
 				}
 			}			
-			remoteInputList.add(remoteInput);			
+			uidList.addAll(uidSet);
+			uidLists.add(uidList);	
+		}
+
+		List<List<Node>> remoteInputList=new ArrayList<List<Node>>();	
+		for(int i=0;i<p;i++) {
+			PartialTree pt=pts.get(i);
+			List<Node> remoteInput=pt.findNodesByUid(uidLists.get(i));            
+			remoteInputList.add(remoteInput);		
 		}
 		
+		//Remote query
+		List<List<Node>> remoteOutputList=queryChid(pts, remoteInputList, test);
+		
+		//Merge results of local query and remote query
+		for(int i=0;i<p;i++) {
+			List<Node> result=outputList.get(i);
+			List<Node> remoteResult=remoteOutputList.get(i);
+			
+			Set<Node> set=new HashSet<Node>();
+			set.addAll(result);
+			set.addAll(remoteResult);
+			
+			result.clear();
+			result.addAll(set);
+		}
+	    
+		return outputList;	
+		
+	}
+	
+	public static void print(List<List<Node>> results) {
 
-		System.out.println("remote");			
 		System.out.println();
-		for(int j=0; j<remoteInputList.size(); j++) {
-			List<Node> result=remoteInputList.get(j);
+		int p=results.size();
+		for(int j=0; j<p; j++) {
+			List<Node> result=results.get(j);
 			System.out.print("  pt"+j+" : ");
 			
 			for(Node node: result) {
@@ -227,18 +237,7 @@ public class QueryExecutor {
 		System.out.println();
 		System.out.println("---------------------------------------------------------------------");
 		
-		//Remote query
-		List<List<Node>> remoteOutputList=queryChid(pts, remoteInputList, test);
-		
-		//Merge results of local query and remote query
-		for(int i=0;i<p;i++) {
-			outputList.get(i).addAll( remoteOutputList.get(i) );			
-		}
-	    
-		return outputList;	
-		
 	}
-
 
 }
 
