@@ -1,105 +1,58 @@
 package exercise.bean;
 
 public class Step {
-	
-	private String nameTest;
-	private Axis axis;
-	private String predicate;
 
-	public Step() {
-		// TODO Auto-generated constructor stub
-		this.nameTest="*";
-		this.axis=Axis.DESCENDANT_OR_SELF;
-	}
+    private String nameTest;
+    private Axis axis;
+    private String predicate;
 
-	public String getNameTest() {
-		return nameTest;
-	}
+    public Step() {
+        // TODO Auto-generated constructor stub
+        this.nameTest = "*";
+        this.axis = Axis.DESCENDANT_OR_SELF;
+    }
 
-	public void setNameTest(String nameTest) {
-		if(nameTest==null) {
-			this.nameTest="*";
-			return;
-		}
-		this.nameTest = nameTest;
-	}
+    public String getNameTest() {
+        return nameTest;
+    }
 
-	public Axis getAxis() {
-		return axis;
-	}
+    public void setNameTest(String nameTest) {
+        if (nameTest == null) {
+            this.nameTest = "*";
+            return;
+        }
+        this.nameTest = nameTest;
+    }
 
-	public void setAxis(Axis axis) {
-		if(axis==null) {
-			this.axis=Axis.DESCENDANT_OR_SELF;
-			return;
-		}
-		this.axis = axis;
-	}
+    public Axis getAxis() {
+        return axis;
+    }
 
-	public String getPredicate() {
-		return predicate;
-	}
+    public void setAxis(Axis axis) {
+        if (axis == null) {
+            this.axis = Axis.DESCENDANT_OR_SELF;
+            return;
+        }
+        this.axis = axis;
+    }
 
-	public void setPredicate(String predicate) {
-		this.predicate = predicate;
-	}
+    public String getPredicate() {
+        return predicate;
+    }
 
-	@Override
-	public String toString() {
-		String s=axis + "::" + nameTest;
-		
-		if(predicate!=null&&!predicate.equals("")) {
-			s+="["+predicate+"]";
-		}
-		
-		return s;
-	}
-	
-	
-	
+    public void setPredicate(String predicate) {
+        this.predicate = predicate;
+    }
+
+    @Override
+    public String toString() {
+        String s = axis + "::" + nameTest;
+
+        if (predicate != null && !predicate.equals("")) {
+            s += "[" + predicate + "]";
+        }
+
+        return s;
+    }
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

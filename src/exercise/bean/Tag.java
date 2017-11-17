@@ -2,53 +2,53 @@ package exercise.bean;
 
 public class Tag {
 
-	private String name;
-	private TagType type;
-	private int tid;
-	
-	public Tag(String name, TagType type) {
-		super();
-		this.name = name;
-		this.type = type;
-	}
+    private String name;
+    private TagType type;
+    private int tid;
 
-	public Tag() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+    public Tag(String name, TagType type) {
+        super();
+        this.name = name;
+        this.type = type;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public Tag() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public TagType getType() {
-		return type;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setType(TagType type) {
-		this.type = type;
-	}
+    public TagType getType() {
+        return type;
+    }
 
-	public int getTid() {
-		return tid;
-	}
+    public void setType(TagType type) {
+        this.type = type;
+    }
 
-	public void setTid(int tid) {
-		this.tid = tid;
-	}
-	
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		if(TagType.START.equals(type)) {
-			return " <"+name+">";
-		}else {
-			return " </"+name+">";
-		}
-	}
-	
+    public int getTid() {
+        return tid;
+    }
+
+    public void setTid(int tid) {
+        this.tid = tid;
+    }
+
+    @Override
+    public String toString() {
+        // TODO Auto-generated method stub
+        if (TagType.START.equals(type)) {
+            return " <" + name + ">";
+        } else {
+            return " </" + name + ">";
+        }
+    }
+
 }
