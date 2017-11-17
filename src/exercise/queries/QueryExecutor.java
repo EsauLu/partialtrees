@@ -12,8 +12,7 @@ import exercise.bean.PartialTree;
 import exercise.bean.RemoteNode;
 import exercise.bean.Step;
 
-public class QueryExecutor {
-	
+public class QueryExecutor {	
 	
 	//Algorithm 1
 	public static List<List<Node>> query(List<Step> steps, List<PartialTree> pts){

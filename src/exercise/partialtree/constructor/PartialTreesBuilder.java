@@ -95,8 +95,8 @@ public class PartialTreesBuilder {
 			    if(NodeType.RIGHT_OPEN_NODE.equals(node.getType())) {
 			    	List<Node> crpNodes=new ArrayList<>();
 			    	crpNodes.add(node);
-                    int en=st+1;
-                    while(en<p) {
+                int en=st+1;
+                while(en<p) {
                     	Node crpNode=nodeMapList.get(en).get(uid);
                     	crpNodes.add(crpNode);
                     	if(NodeType.LEFT_OPEN_NODE.equals(crpNode.getType())) {
