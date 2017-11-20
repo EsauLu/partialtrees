@@ -48,8 +48,7 @@ public class QueryExecutor {
         return resultList;
     }
 
-    public static List<List<Node>> queryWithAixs(Axis axis, List<PartialTree> pts, List<List<Node>> inputLists,
-            String test) {
+    public static List<List<Node>> queryWithAixs(Axis axis, List<PartialTree> pts, List<List<Node>> inputLists, String test) {
 
         if (Axis.CHILD.equals(axis)) {
             return queryChid(pts, inputLists, test);
@@ -154,8 +153,7 @@ public class QueryExecutor {
         return nodeLists;
     }
 
-    public static List<List<Node>> queryFollowingSibling(List<PartialTree> pts, List<List<Node>> inputLists,
-            String test) {
+    public static List<List<Node>> queryFollowingSibling(List<PartialTree> pts, List<List<Node>> inputLists, String test) {
 
         List<List<Node>> outputList = new ArrayList<List<Node>>();
         int p = pts.size();
@@ -172,9 +170,8 @@ public class QueryExecutor {
         for (int i = 0; i < p; i++) {
             for (Node n : inputLists.get(i)) {
                 Node parent = n.getParent();
-                if (!NodeType.RIGHT_OPEN_NODE.equals(n.getType()) && !NodeType.PRE_NODE.equals(n.getType())
-                        && parent != null && (NodeType.RIGHT_OPEN_NODE.equals(parent.getType())
-                                || NodeType.PRE_NODE.equals(parent.getType()))) {
+                if (!NodeType.RIGHT_OPEN_NODE.equals(n.getType()) && !NodeType.PRE_NODE.equals(n.getType()) && parent != null
+                        && (NodeType.RIGHT_OPEN_NODE.equals(parent.getType()) || NodeType.PRE_NODE.equals(parent.getType()))) {
                     toBeQueried.add(new RemoteNode(parent, i + 1, parent.getEnd()));
                 }
             }
