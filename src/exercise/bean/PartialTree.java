@@ -75,7 +75,6 @@ public class PartialTree {
         setIsChecked(false);
 
          for (int i = 0; i < inputList.size(); i++) {
-//        for (int i = inputList.size() - 1; i >= 0; i--) {
 
             Node node = nodeMap.get(inputList.get(i).getUid());
             if (node == null) {
