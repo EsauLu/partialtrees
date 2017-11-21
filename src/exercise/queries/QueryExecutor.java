@@ -14,7 +14,15 @@ import exercise.bean.Step;
 
 public class QueryExecutor {
 
-    // Algorithm 1
+    /**
+     * XPath query algorithm.
+     * 
+     * @param steps
+     *            An XPath expression.
+     * @param pts
+     *            An indexed set of partial trees.
+     * @return An indexed set of results of query.
+     */
     public static List<List<Node>> query(List<Step> steps, List<PartialTree> pts) {
 
         int p = pts.size();
@@ -22,6 +30,8 @@ public class QueryExecutor {
         String string = "";
         string.hashCode();
 
+        // The root of every partial tree are put into the lists for intermediate
+        // results.
         for (int i = 0; i < p; i++) {
             List<Node> tem = new ArrayList<>();
             tem.add(pts.get(i).getRoot());
@@ -36,7 +46,7 @@ public class QueryExecutor {
 
             String predicate = step.getPredicate();
             if (predicate != null) {
-                // querying predicate
+                // Querying predicate. his block will be executed when a query has a predicate.
             }
 
             System.out.println();
@@ -48,20 +58,37 @@ public class QueryExecutor {
         return resultList;
     }
 
+    /**
+     * Querying a step with an axis.
+     * 
+     * @param axis
+     *            The axis of the step.
+     * @param pts
+     *            An indexed set of partial trees.
+     * @param inputLists
+     *            An indexed set of input nodes.
+     * @param test
+     *            A string of nametest.
+     * @return An indexed set of results.
+     */
     public static List<List<Node>> queryWithAixs(Axis axis, List<PartialTree> pts, List<List<Node>> inputLists, String test) {
 
+        // Child axis
         if (Axis.CHILD.equals(axis)) {
             return queryChid(pts, inputLists, test);
         }
 
+        // Descendant axis
         if (Axis.DESCENDANT.equals(axis)) {
             return queryDescendant(pts, inputLists, test);
         }
 
+        // Parent axis
         if (Axis.PARENT.equals(axis)) {
             return queryParent(pts, inputLists, test);
         }
 
+        // Following-sibling axis
         if (Axis.FOLLOWING_SIBLING.equals(axis)) {
             return queryFollowingSibling(pts, inputLists, test);
         }
@@ -69,6 +96,17 @@ public class QueryExecutor {
         return null;
     }
 
+    /**
+     * Querying a step with a child axis.
+     * 
+     * @param pts
+     *            An indexed set of partial trees.
+     * @param inputLists
+     *            An indexed set of input nodes.
+     * @param test
+     *            A string of nametest.
+     * @return An indexed set of results.
+     */
     public static List<List<Node>> queryChid(List<PartialTree> pts, List<List<Node>> inputLists, String test) {
 
         List<List<Node>> outputList = new ArrayList<>();
@@ -87,6 +125,17 @@ public class QueryExecutor {
         return outputList;
     }
 
+    /**
+     * Querying a step with a descendant axis.
+     * 
+     * @param pts
+     *            An indexed set of partial trees.
+     * @param inputLists
+     *            An indexed set of input nodes.
+     * @param test
+     *            A string of nametest.
+     * @return An indexed set of results.
+     */
     public static List<List<Node>> queryDescendant(List<PartialTree> pts, List<List<Node>> inputLists, String test) {
         List<List<Node>> outputList = new ArrayList<>();
 
@@ -104,6 +153,17 @@ public class QueryExecutor {
         return outputList;
     }
 
+    /**
+     * Querying a step with a parent axis.
+     * 
+     * @param pts
+     *            An indexed set of partial trees.
+     * @param inputLists
+     *            An indexed set of input nodes.
+     * @param test
+     *            A string of nametest.
+     * @return An indexed set of results.
+     */
     public static List<List<Node>> queryParent(List<PartialTree> pts, List<List<Node>> inputLists, String test) {
 
         List<List<Node>> outputList = new ArrayList<>();
@@ -123,8 +183,17 @@ public class QueryExecutor {
 
     }
 
+    /**
+     * Sharing the selected nodes.
+     * 
+     * @param pts
+     *            An indexed set of partial trees.
+     * @param nodeLists
+     *            An indexed set of input nodes.
+     * @return An indexed set of results.
+     */
     public static List<List<Node>> shareNodes(List<PartialTree> pts, List<List<Node>> nodeLists) {
-
+        
         List<Node> toBeShare = new ArrayList<Node>();
 
         int p = pts.size();
@@ -153,6 +222,15 @@ public class QueryExecutor {
         return nodeLists;
     }
 
+    /**
+     * Sharing the selected nodes.
+     * 
+     * @param pts
+     *            An indexed set of partial trees.
+     * @param nodeLists
+     *            An indexed set of input nodes.
+     * @return An indexed set of results.
+     */
     public static List<List<Node>> queryFollowingSibling(List<PartialTree> pts, List<List<Node>> inputLists, String test) {
 
         List<List<Node>> outputList = new ArrayList<List<Node>>();

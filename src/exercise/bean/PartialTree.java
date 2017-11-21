@@ -10,7 +10,9 @@ import java.util.Map;
 public class PartialTree {
 
     private int pid;
+
     private Map<Integer, Node> nodeMap;
+
     private Node root;
 
     public PartialTree() {
@@ -72,7 +74,8 @@ public class PartialTree {
         List<Node> outputList = new ArrayList<>();
         setIsChecked(false);
 
-        for (int i = 0; i < inputList.size(); i++) {
+         for (int i = 0; i < inputList.size(); i++) {
+//        for (int i = inputList.size() - 1; i >= 0; i--) {
 
             Node node = nodeMap.get(inputList.get(i).getUid());
             if (node == null) {
@@ -84,7 +87,7 @@ public class PartialTree {
 
             while (!stack.isEmpty()) {
                 Node nt = stack.pop();
-                if (nt.isChecked()) {
+                if (nt.isChecked()) { 
                     continue;
                 }
                 nt.setChecked(true);
@@ -179,6 +182,15 @@ public class PartialTree {
 
     }
 
+    private void setIsChecked(boolean isChecked) {
+
+        for (Integer uid : nodeMap.keySet()) {
+            Node node = nodeMap.get(uid);
+            node.setChecked(isChecked);
+        }
+
+    }
+
     private void bfs() {
 
         if (root == null) {
@@ -209,15 +221,6 @@ public class PartialTree {
                 presib = nd;
             }
 
-        }
-
-    }
-
-    private void setIsChecked(boolean isChecked) {
-
-        for (Integer uid : nodeMap.keySet()) {
-            Node node = nodeMap.get(uid);
-            node.setChecked(isChecked);
         }
 
     }
