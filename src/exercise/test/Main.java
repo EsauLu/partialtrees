@@ -6,9 +6,9 @@ import exercise.bean.Node;
 import exercise.bean.PartialTree;
 import exercise.bean.Step;
 import exercise.partialtree.constructor.PartialTreesBuilder;
-import exercise.partialtree.utils.TreeTools;
 import exercise.queries.QueryExecutor;
-import exercise.queries.parse.XPathTools;
+import exercise.queries.parse.XPathParser;
+import exercise.utils.Utils;
 
 public class Main {
 
@@ -43,21 +43,22 @@ public class Main {
         System.out.println();
         for (int i = 0; i < pts.size(); i++) {
             System.out.print("  pt" + i + " ==> ");
-            TreeTools.dfsWithDepth(pts.get(i).getRoot());
+            Utils.dfsWithDepth(pts.get(i).getRoot());
             System.out.println();
         }
         System.out.println("====================================================================================");
 
-        // List<Step> steps =
-        // XPathTools.parseXPathToSteps("/descendant::B/following-sibling::B");
+        Step steps = XPathParser.parseXpath("/descendant::A[descendant::B/descendant::C/parent::B]/following-sibling::B[descendant::B/descendant::C[descendant::G/descendant::H/parent::I]/parent::B]");
 
-        List<Step> steps = XPathTools.parseXPathToSteps("/child::A/descendant::B/descendant::C/parent::B");
+        System.out.println(steps.toXPath());
+        
+        steps = XPathParser.parseXpath("/child::A/descendant::B/descendant::C/parent::B");
 
         List<List<Node>> resultList = QueryExecutor.query(steps, pts);
 
         System.out.println("====================================================================================");
 
-        steps = XPathTools.parseXPathToSteps("/descendant::B/following-sibling::B");
+        steps = XPathParser.parseXpath("/descendant::B/following-sibling::B");
 
         // steps =
         // XPathTools.parseXPathToSteps("/child::A/descendant::B/descendant::C/parent::B");

@@ -1,4 +1,4 @@
-package exercise.partialtree.utils;
+package exercise.utils;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -7,7 +7,7 @@ import java.util.List;
 import exercise.bean.Node;
 import exercise.bean.NodeType;
 
-public class TreeTools {
+public class Utils {
 
     public static void bfs(Node root) {
 
@@ -172,5 +172,25 @@ public class TreeTools {
         System.out.println();
 
     }
+    
+    public static void print(List<List<Node>> results) {
+
+        System.out.println();
+        int p = results.size();
+        for (int j = 0; j < p; j++) {
+            List<Node> result = results.get(j);
+            System.out.print("  pt" + j + " : ");
+
+            for (Node node : result) {
+                System.out.print(node);
+            }
+
+            System.out.println();
+        }
+        System.out.println();
+        System.out.println("---------------------------------------------------------------------");
+
+    }
+
 
 }

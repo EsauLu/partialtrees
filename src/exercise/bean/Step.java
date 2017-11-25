@@ -1,10 +1,18 @@
 package exercise.bean;
 
+import java.util.List;
+
 public class Step {
 
     private String nameTest;
     private Axis axis;
-    private String predicate;
+    private String predicateStr;
+    
+    private Step next;
+    
+    private Step predicate;
+    
+    private List<Step> pSteps;
 
     public Step() {
         // TODO Auto-generated constructor stub
@@ -28,6 +36,22 @@ public class Step {
         return axis;
     }
 
+    public Step getNext() {
+        return next;
+    }
+
+    public void setNext(Step next) {
+        this.next = next;
+    }
+
+    public Step getPredicate() {
+        return predicate;
+    }
+
+    public void setPredicate(Step predicate) {
+        this.predicate = predicate;
+    }
+
     public void setAxis(Axis axis) {
         if (axis == null) {
             this.axis = Axis.DESCENDANT_OR_SELF;
@@ -36,20 +60,43 @@ public class Step {
         this.axis = axis;
     }
 
-    public String getPredicate() {
-        return predicate;
+    public String getPredicateStr() {
+        return predicateStr;
     }
 
-    public void setPredicate(String predicate) {
-        this.predicate = predicate;
+    public void setPredicateStr(String predicate) {
+        this.predicateStr = predicate;
+    }
+
+    public List<Step> getpSteps() {
+        return pSteps;
+    }
+
+    public void setpSteps(List<Step> pSteps) {
+        this.pSteps = pSteps;
     }
 
     @Override
     public String toString() {
         String s = axis + "::" + nameTest;
 
-        if (predicate != null && !predicate.equals("")) {
+        if (predicate != null) {
             s += "[" + predicate + "]";
+        }
+        
+        return s;
+    }
+    
+    public String toXPath() {
+        String s = axis + "::" + nameTest;
+
+        if (predicate != null) {
+            s += "[" + predicate.toXPath() + "]";
+        }
+        
+        if(next!=null) {
+            s+="/";
+            s+=next.toXPath();
         }
 
         return s;

@@ -11,6 +11,7 @@ import exercise.bean.NodeType;
 import exercise.bean.PartialTree;
 import exercise.bean.RemoteNode;
 import exercise.bean.Step;
+import exercise.utils.Utils;
 
 public class QueryExecutor {
 
@@ -23,12 +24,10 @@ public class QueryExecutor {
      *            An indexed set of partial trees.
      * @return An indexed set of results of query.
      */
-    public static List<List<Node>> query(List<Step> steps, List<PartialTree> pts) {
+    public static List<List<Node>> query(Step steps, List<PartialTree> pts) {
 
         int p = pts.size();
         List<List<Node>> resultList = new ArrayList<List<Node>>();
-        String string = "";
-        string.hashCode();
 
         // The root of every partial tree are put into the lists for intermediate
         // results.
@@ -38,20 +37,22 @@ public class QueryExecutor {
             resultList.add(tem);
         }
 
-        int size = steps.size();
-        for (int i = 0; i < size; i++) {
+        Step step=steps;
+        while (step!=null) {
 
-            Step step = steps.get(i);
             resultList = queryWithAixs(step.getAxis(), pts, resultList, step.getNameTest());
 
-            String predicate = step.getPredicate();
+            Step predicate = step.getPredicate();
             if (predicate != null) {
                 // Querying predicate. his block will be executed when a query has a predicate.
+                resultList=PQueryExecutor.predicateQuery(predicate, pts, resultList);
             }
 
             System.out.println();
-            System.out.println("Step" + i + " : " + step);
-            print(resultList);
+            System.out.println("Step" + " : " + step);
+            Utils.print(resultList);
+            
+            step=step.getNext();
 
         }
 
@@ -293,25 +294,6 @@ public class QueryExecutor {
         }
 
         return outputList;
-
-    }
-
-    public static void print(List<List<Node>> results) {
-
-        System.out.println();
-        int p = results.size();
-        for (int j = 0; j < p; j++) {
-            List<Node> result = results.get(j);
-            System.out.print("  pt" + j + " : ");
-
-            for (Node node : result) {
-                System.out.print(node);
-            }
-
-            System.out.println();
-        }
-        System.out.println();
-        System.out.println("---------------------------------------------------------------------");
 
     }
 
