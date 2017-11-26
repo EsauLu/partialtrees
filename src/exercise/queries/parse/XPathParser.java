@@ -12,35 +12,6 @@ import exercise.bean.Step;
 
 public class XPathParser {
 
-    public static void test(String xpath) {
-
-    }
-
-//    public static List<Step> parseXPathToSteps(String xpath) {
-//
-//        System.out.println("\nXPath : " + xpath);
-//        System.out.println("\n---------------------------------------------------------------------");
-//        // Pattern pattern =
-//        // Pattern.compile("/([a-zA-Z\\-:]+)(\\[([a-zA-Z:/\\-]*)\\])?");
-//        Pattern pattern = Pattern.compile("/(([a-zA-Z\\-]*)(::)*([a-zA-Z])*(\\[([^\\]]*)\\])?)");
-//        Matcher matcher = pattern.matcher(xpath);
-//
-//        List<Step> steps = new ArrayList<Step>();
-//        while (matcher.find()) {
-//
-//            Step step = new Step();
-//
-//            step.setNameTest(matcher.group(4));
-//            step.setAxis(Axis.parseString(matcher.group(2)));
-//            step.setPredicateStr(matcher.group(6));
-//
-//            steps.add(step);
-//
-//        }
-//        parseXpath(xpath);
-//        return steps;
-//    }
-
     public static Step parseXpath(String xpath) {
 
         StringBuffer sb = new StringBuffer(xpath);

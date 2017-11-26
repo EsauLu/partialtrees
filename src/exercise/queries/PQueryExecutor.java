@@ -14,7 +14,7 @@ public class PQueryExecutor {
 
     public static List<List<Node>> predicateQuery(Step psteps, List<PartialTree> pts, List<List<Node>> inputLists) {
         
-        return null;
+        return inputLists;
     }
     
     public static List<List<PNode>> pQuery(Step psteps, List<PartialTree> pts, List<List<PNode>> inputLists) {
@@ -48,7 +48,23 @@ public class PQueryExecutor {
     }
 
      public static List<List<PNode>> preparePredicate( List<List<Node>> inputLists){
-         return null;
+         
+         List<List<PNode>> outputLists=new ArrayList<List<PNode>>();
+         
+         for(int i=0;i<inputLists.size();i++) {
+             List<Node> list=inputLists.get(i);
+             List<PNode> plist=new ArrayList<>();
+             for(Node node: list) {
+                 PNode pNode=new PNode();
+                 pNode.setNode(node);
+                 pNode.setLink(new Link(i, node.getUid()));
+                 plist.add(pNode);
+             }
+             outputLists.add(plist);
+         }
+         
+         return outputLists;
+         
      }
 
 }

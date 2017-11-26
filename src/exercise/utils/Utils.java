@@ -175,12 +175,20 @@ public class Utils {
     
     public static void print(List<List<Node>> results) {
 
+        if(results==null) {
+            System.out.println("null list");
+            return;
+        }
+        
         System.out.println();
         int p = results.size();
         for (int j = 0; j < p; j++) {
             List<Node> result = results.get(j);
             System.out.print("  pt" + j + " : ");
-
+            if (result==null) {
+                System.out.println("null pt");
+                continue;
+            }
             for (Node node : result) {
                 System.out.print(node);
             }

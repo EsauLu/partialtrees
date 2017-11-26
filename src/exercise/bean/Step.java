@@ -81,7 +81,7 @@ public class Step {
         String s = axis + "::" + nameTest;
 
         if (predicate != null) {
-            s += "[" + predicate + "]";
+            s += "[" + predicate.toXPath() + "]";
         }
         
         return s;

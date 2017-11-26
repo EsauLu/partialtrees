@@ -48,25 +48,29 @@ public class Main {
         }
         System.out.println("====================================================================================");
 
-        Step steps = XPathParser.parseXpath("/descendant::A[descendant::B/descendant::C/parent::B]/following-sibling::B[descendant::B/descendant::C[descendant::G/descendant::H/parent::I]/parent::B]");
-
-        System.out.println(steps.toXPath());
         
-        steps = XPathParser.parseXpath("/child::A/descendant::B/descendant::C/parent::B");
+        String[] xpaths= {
+//                "/descendant::A[descendant::B/descendant::C/parent::B]/following-sibling::B[descendant::B/descendant::C[descendant::G/descendant::H/parent::I]/parent::B]",
+                "/descendant::B[following-sibling::B/child::C]/child::C",
+                "/child::A/descendant::B/descendant::C/parent::B",
+                "/descendant::B/following-sibling::B"
+        };
+        
+        for(String xpath: xpaths) {
+            
+            System.out.println();
+            System.out.println("XPath : " + xpath);
+            System.out.println();
+            System.out.println("---------------------------------------------------------------------");
+            
+            Step steps = XPathParser.parseXpath(xpath);
 
-        List<List<Node>> resultList = QueryExecutor.query(steps, pts);
+            List<List<Node>> resultLists = QueryExecutor.query(steps, pts);
 
-        System.out.println("====================================================================================");
-
-        steps = XPathParser.parseXpath("/descendant::B/following-sibling::B");
-
-        // steps =
-        // XPathTools.parseXPathToSteps("/child::A/descendant::B/descendant::C/parent::B");
-
-        resultList = QueryExecutor.query(steps, pts);
-
-        System.out.println("====================================================================================");
-
+            System.out.println("====================================================================================");
+            
+        }
+        
     }
 
 }
