@@ -8,6 +8,7 @@ import java.util.Set;
 import exercise.bean.Axis;
 import exercise.bean.Node;
 import exercise.bean.NodeType;
+import exercise.bean.PNode;
 import exercise.bean.PartialTree;
 import exercise.bean.RemoteNode;
 import exercise.bean.Step;
@@ -45,7 +46,13 @@ public class QueryExecutor {
             Step predicate = step.getPredicate();
             if (predicate != null) {
                 // Querying predicate. his block will be executed when a query has a predicate.
-                resultList=PQueryExecutor.predicateQuery(predicate, pts, resultList);
+                
+                List<List<PNode>> intermadiate=PQueryExecutor.preparePredicate(resultList);
+                
+                intermadiate=PQueryExecutor.predicateQuery(predicate, pts, intermadiate);
+                
+                resultList=PQueryExecutor.proccessPredicate(pts, intermadiate);
+                
             }
 
             System.out.println();
@@ -117,7 +124,7 @@ public class QueryExecutor {
 
             PartialTree pt = pts.get(i);
 
-            List<Node> result = pt.findChilds(inputLists.get(i), test);
+            List<Node> result = pt.findChildNodes(inputLists.get(i), test);
 
             outputList.add(result);
 
@@ -145,7 +152,7 @@ public class QueryExecutor {
 
             PartialTree pt = pts.get(i);
 
-            List<Node> result = pt.findDescendants(inputLists.get(i), test);
+            List<Node> result = pt.findDescendantNodes(inputLists.get(i), test);
 
             outputList.add(result);
 
@@ -174,7 +181,7 @@ public class QueryExecutor {
 
             PartialTree pt = pts.get(i);
 
-            List<Node> result = pt.findParents(inputLists.get(i), test);
+            List<Node> result = pt.findParentNodes(inputLists.get(i), test);
 
             outputList.add(result);
 
@@ -240,7 +247,7 @@ public class QueryExecutor {
         // Local query
         for (int i = 0; i < p; i++) {
             PartialTree pt = pts.get(i);
-            List<Node> result = pt.findFollowingSiblings(inputLists.get(i), test);
+            List<Node> result = pt.findFolSibNodes(inputLists.get(i), test);
             outputList.add(result);
         }
 

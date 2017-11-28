@@ -6,6 +6,7 @@ import java.util.List;
 
 import exercise.bean.Node;
 import exercise.bean.NodeType;
+import exercise.bean.PNode;
 
 public class Utils {
 
@@ -197,6 +198,34 @@ public class Utils {
         }
         System.out.println();
         System.out.println("---------------------------------------------------------------------");
+
+    }
+
+    
+    public static void printPNodeList(List<List<PNode>> results) {
+
+        if(results==null) {
+            System.out.println("null list");
+            return;
+        }
+        
+        System.out.println();
+        int p = results.size();
+        for (int j = 0; j < p; j++) {
+            List<PNode> result = results.get(j);
+            System.out.print("  pt" + j + " : ");
+            if (result==null) {
+                System.out.println("null pt");
+                continue;
+            }
+            for (PNode node : result) {
+                System.out.print(node);
+            }
+
+            System.out.println();
+        }
+        System.out.println();
+        System.out.println("----------------------------------------------------------");
 
     }
 

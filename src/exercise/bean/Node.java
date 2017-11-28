@@ -1,7 +1,6 @@
 package exercise.bean;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -160,11 +159,6 @@ public class Node {
     @Override
     public int hashCode() {
         // TODO Auto-generated method stub
-
-        HashSet<Node> set = new HashSet<>();
-
-        set.contains(null);
-
         return Objects.hash(uid, tagName, type);
     }
 
