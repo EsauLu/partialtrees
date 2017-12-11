@@ -146,9 +146,9 @@ public class PartialTree {
 
             while (!stack.isEmpty()) {
                 Node nt = stack.pop();
-                if (nt.isChecked()) {
-                    continue;
-                }
+//                if (nt.isChecked()) {
+//                    continue;
+//                }
                 nt.setChecked(true);
                 List<Node> childList = nt.getChildList();
                 for (int j = 0; j < childList.size(); j++) {
